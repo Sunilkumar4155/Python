@@ -1,0 +1,344 @@
+Problem 1: Real-Time Weather Monitoring System
+Scenario:
+You are developing a real-time weather monitoring system for a weather forecasting
+company. The system needs to fetch and display weather data for a specified location.
+Tasks:
+1. Model the data flow for fetching weather information from an external API and
+displaying it to the user.
+2. Implement a Python application that integrates with a weather API (e.g.,
+OpenWeatherMap) to fetch real-time weather data.
+3. Display the current weather information, including temperature, weather
+conditions, humidity, and wind speed.
+4. Allow users to input the location (city name or coordinates) and display the
+corresponding weather data.
+Deliverables:
+ Data flow diagram illustrating the interaction between the application and the API.
+ Pseudocode and implementation of the weather monitoring system.
+ Documentation of the API integration and the methods used to fetch and display
+weather data.
+ Explanation of any assumptions made and potential improvements.
+
+Answer:
+import requests
+
+def get_weather_data(location):
+api_key = &quot;b11f2fe52244a66eb93ee793f28c2d3b&quot; # Your provided API key
+base_url = &quot;http://api.openweathermap.org/data/2.5/weather?&quot;
+complete_url = base_url + &quot;q=&quot; + location + &quot;&amp;appid=&quot; + api_key
+
+response = requests.get(complete_url)
+return response.json()
+
+def display_weather_data(weather_data):
+if weather_data[&#39;cod&#39;] != &#39;404&#39;:
+main = weather_data[&#39;main&#39;]
+wind = weather_data[&#39;wind&#39;]
+weather_description = weather_data[&#39;weather&#39;][0][&#39;description&#39;]
+
+print(f&quot;Temperature: {main[&#39;temp&#39;]}K&quot;)
+print(f&quot;Humidity: {main[&#39;humidity&#39;]}%&quot;)
+print(f&quot;Weather Description: {weather_description}&quot;)
+print(f&quot;Wind Speed: {wind[&#39;speed&#39;]} m/s&quot;)
+else:
+print(&quot;City Not Found&quot;)
+
+if _name_ == &quot;_main_&quot;:
+location = input(&quot;Enter the city name: &quot;)
+weather_data = get_weather_data(location)
+display_weather_data(weather_data)
+
+Problem 2: Inventory Management System Optimization
+Scenario:
+You have been hired by a retail company to optimize their inventory management system.
+The company wants to minimize stockouts and overstock situations while maximizing
+inventory turnover and profitability.
+
+Tasks:
+1. Model the inventory system: Define the structure of the inventory system,
+including products, warehouses, and current stock levels.
+2. Implement an inventory tracking application: Develop a Python application that
+tracks inventory levels in real-time and alerts when stock levels fall below a certain
+threshold.
+3. Optimize inventory ordering: Implement algorithms to calculate optimal reorder
+points and quantities based on historical sales data, lead times, and demand
+forecasts.
+4. Generate reports: Provide reports on inventory turnover rates, stockout
+occurrences, and cost implications of overstock situations.
+5. User interaction: Allow users to input product IDs or names to view current stock
+levels, reorder recommendations, and historical data.
+Deliverables:
+ Data Flow Diagram: Illustrate how data flows within the inventory management
+system, from input (e.g., sales data, inventory adjustments) to output (e.g., reorder
+alerts, reports).
+ Pseudocode and Implementation: Provide pseudocode and actual code
+demonstrating how inventory levels are tracked, reorder points are calculated, and
+reports are generated.
+ Documentation: Explain the algorithms used for reorder optimization, how
+historical data influences decisions, and any assumptions made (e.g., constant lead
+times).
+ User Interface: Develop a user-friendly interface for accessing inventory
+information, viewing reports, and receiving alerts.
+ Assumptions and Improvements: Discuss assumptions about demand patterns,
+supplier reliability, and potential improvements for the inventory management
+system&#39;s efficiency and accuracy.
+Answer:
+class Product:
+def _init_(self, product_id, name, category, current_stock, reorder_point, reorder_quantity,
+lead_time):
+self.product_id = product_id
+self.name = name
+self.category = category
+self.current_stock = current_stock
+self.reorder_point = reorder_point
+self.reorder_quantity = reorder_quantity
+self.lead_time = lead_time
+self.historical_sales = []
+
+def add_sales_data(self, sales):
+self.historical_sales.append(sales)
+self.current_stock -= sales # Update current stock after sale
+
+class Warehouse:
+def _init_(self, warehouse_id, location):
+self.warehouse_id = warehouse_id
+self.location = location
+self.products = {}
+
+def add_product(self, product):
+self.products[product.product_id] = product
+
+def track_inventory(self):
+print(&quot;\n--- Inventory Tracking ---&quot;)
+for product in self.products.values():
+if product.current_stock &lt; product.reorder_point:
+print(f&quot;Reorder Alert for: {product.name}&quot;)
+print(f&quot;Current Stock: {product.current_stock}&quot;)
+print(f&quot;Recommended Order Quantity: {product.reorder_quantity}&quot;)
+else:
+print(f&quot;{product.name} is sufficiently stocked.&quot;)
+
+def generate_report(self):
+print(&quot;\n--- Inventory Report ---&quot;)
+for product in self.products.values():
+print(f&quot;Product: {product.name}&quot;)
+print(f&quot;Current Stock: {product.current_stock}&quot;)
+print(f&quot;Turnover Rate: {self.calculate_turnover_rate(product)}&quot;)
+
+def calculate_turnover_rate(self, product):
+total_sales = sum(product.historical_sales)
+average_stock = (product.current_stock + product.current_stock) / 2
+turnover_rate = total_sales / average_stock if average_stock &gt; 0 else 0
+
+return turnover_rate
+
+def calculate_eoq(annual_demand, ordering_cost, holding_cost):
+if holding_cost &gt; 0:
+return (2 * annual_demand * ordering_cost / holding_cost) ** 0.5
+return 0
+
+def main():
+warehouse = Warehouse(1, &quot;Main Warehouse&quot;)
+
+# Example products
+product1 = Product(101, &quot;Laptop&quot;, &quot;Electronics&quot;, 15, 5, 20, 2)
+product1.add_sales_data(3)
+product1.add_sales_data(4)
+
+product2 = Product(102, &quot;Smartphone&quot;, &quot;Electronics&quot;, 30, 10, 15, 3)
+product2.add_sales_data(5)
+product2.add_sales_data(6)
+
+warehouse.add_product(product1)
+warehouse.add_product(product2)
+
+while True:
+print(&quot;\nOptions:&quot;)
+print(&quot;1. Track Inventory&quot;)
+print(&quot;2. Generate Report&quot;)
+print(&quot;3. Add Sales Data&quot;)
+print(&quot;4. Calculate EOQ&quot;)
+print(&quot;5. Exit&quot;)
+
+choice = input(&quot;Select an option: &quot;)
+
+if choice == &#39;1&#39;:
+warehouse.track_inventory()
+
+elif choice == &#39;2&#39;:
+warehouse.generate_report()
+elif choice == &#39;3&#39;:
+product_id = int(input(&quot;Enter Product ID: &quot;))
+sales = int(input(&quot;Enter sales data: &quot;))
+if product_id in warehouse.products:
+warehouse.products[product_id].add_sales_data(sales)
+print(&quot;Sales data updated.&quot;)
+else:
+print(&quot;Product not found.&quot;)
+elif choice == &#39;4&#39;:
+product_id = int(input(&quot;Enter Product ID: &quot;))
+if product_id in warehouse.products:
+annual_demand = sum(warehouse.products[product_id].historical_sales)
+ordering_cost = 50 # Example ordering cost
+holding_cost = 2 # Example holding cost per unit
+eoq = calculate_eoq(annual_demand, ordering_cost, holding_cost)
+print(f&quot;Optimal Order Quantity (EOQ) for {warehouse.products[product_id].name}:
+{eoq:.2f}&quot;)
+else:
+print(&quot;Product not found.&quot;)
+elif choice == &#39;5&#39;:
+break
+else:
+print(&quot;Invalid option, try again.&quot;)
+
+if _name_ == &quot;_main_&quot;:
+main()
+
+Problem 3: Real-Time Traffic Monitoring System
+Scenario:
+You are working on a project to develop a real-time traffic monitoring system for a smart
+city initiative. The system should provide real-time traffic updates and suggest alternative
+routes.
+Tasks:
+1. Model the data flow for fetching real-time traffic information from an external API
+and displaying it to the user.
+2. Implement a Python application that integrates with a traffic monitoring API (e.g.,
+Google Maps Traffic API) to fetch real-time traffic data.
+3. Display current traffic conditions, estimated travel time, and any incidents or
+delays.
+4. Allow users to input a starting point and destination to receive traffic updates and
+alternative routes.
+Deliverables:
+ Data flow diagram illustrating the interaction between the application and the API.
+ Pseudocode and implementation of the traffic monitoring system.
+ Documentation of the API integration and the methods used to fetch and display
+traffic data.
+ Explanation of any assumptions made and potential improvements.
+Answer:
+Pseudocode:
+1. Define constants for the API key and base URL of the traffic monitoring API.
+2. Create a function `fetch_traffic_data(start, destination)`:
+a. Construct the API request URL with the start and destination points.
+b. Send a request to the API and get the response.
+c. Parse the response to extract traffic data (conditions, travel time, incidents).
+d. Return the extracted traffic data.
+3. Create a function `display_traffic_data(traffic_data)`:
+a. Print current traffic conditions.
+b. Print estimated travel time.
+c. Print any incidents or delays.
+d. Suggest alternative routes if traffic is heavy.
+4. Create a function `main()`:
+a. Prompt the user for a starting point and destination.
+
+b. Call `fetch_traffic_data(start, destination)` to get real-time traffic data.
+c. Call `display_traffic_data(traffic_data)` to display the information.
+5. Execute the `main()` function.
+
+Python code:
+
+import requests
+
+API_KEY = &#39;YOUR_GOOGLE_MAPS_API_KEY&#39;
+BASE_URL = &#39;https://maps.googleapis.com/maps/api/directions/json&#39;
+
+def fetch_traffic_data(start, destination):
+params = {
+&#39;origin&#39;: start,
+&#39;destination&#39;: destination,
+&#39;key&#39;: API_KEY,
+&#39;departure_time&#39;: &#39;now&#39;
+}
+response = requests.get(BASE_URL, params=params)
+data = response.json()
+
+if data[&#39;status&#39;] == &#39;OK&#39;:
+route = data[&#39;routes&#39;][0]
+legs = route[&#39;legs&#39;][0]
+traffic_data = {
+&#39;traffic_conditions&#39;: legs[&#39;traffic_speed_entry&#39;],
+&#39;travel_time&#39;: legs[&#39;duration_in_traffic&#39;][&#39;text&#39;],
+&#39;incidents&#39;: route[&#39;warnings&#39;]
+}
+return traffic_data
+else:
+raise Exception(&#39;Error fetching traffic data: &#39; + data[&#39;status&#39;])
+
+def display_traffic_data(traffic_data):
+print(&quot;Current Traffic Conditions: &quot;)
+for condition in traffic_data[&#39;traffic_conditions&#39;]:
+print(f&quot; - Speed: {condition[&#39;speed&#39;]} km/h&quot;)
+
+print(f&quot;Estimated Travel Time: {traffic_data[&#39;travel_time&#39;]}&quot;)
+
+print(&quot;Incidents or Delays: &quot;)
+if traffic_data[&#39;incidents&#39;]:
+for incident in traffic_data[&#39;incidents&#39;]:
+print(f&quot; - {incident}&quot;)
+else:
+print(&quot; - No incidents or delays reported.&quot;)
+
+def main():
+start = input(&quot;Enter the starting point: &quot;)
+destination = input(&quot;Enter the destination: &quot;)
+
+try:
+traffic_data = fetch_traffic_data(start, destination)
+display_traffic_data(traffic_data)
+except Exception as e:
+print(f&quot;An error occurred: {e}&quot;)
+
+if __name__ == &quot;__main__&quot;:
+main()
+
+Problem 4: Real-Time COVID-19 Statistics Tracker
+Scenario:
+
+You are developing a real-time COVID-19 statistics tracking application for a healthcare
+organization. The application should provide up-to-date information on COVID-19 cases,
+recoveries, and deaths for a specified region.
+Tasks:
+1. Model the data flow for fetching COVID-19 statistics from an external API and
+displaying it to the user.
+2. Implement a Python application that integrates with a COVID-19 statistics API (e.g.,
+disease.sh) to fetch real-time data.
+3. Display the current number of cases, recoveries, and deaths for a specified region.
+4. Allow users to input a region (country, state, or city) and display the corresponding
+COVID-19 statistics.
+Deliverables:
+ Data flow diagram illustrating the interaction between the application and the API.
+ Pseudocode and implementation of the COVID-19 statistics tracking application.
+ Documentation of the API integration and the methods used to fetch and display
+COVID-19 data.
+ Explanation of any assumptions made and potential improvements.
+Answer :
+import requests
+
+def fetch_covid_data(region):
+API_URL = f&quot;https://disease.sh/v3/covid-19/countries/{region}&quot;
+response = make_api_call(API_URL)
+
+if response.status_code == 200:
+return response.json()
+else:
+return f&quot;Error fetching data: {response.status_code}&quot;
+
+def make_api_call(url):
+headers = {&quot;Accept&quot;: &quot;application/json&quot;}
+return requests.get(url, headers=headers)
+
+def display_statistics(data):
+print(f&quot;COVID-19 Statistics for {data[&#39;country&#39;]}:&quot;)
+print(f&quot;Total Cases: {data[&#39;cases&#39;]}&quot;)
+print(f&quot;Total Recoveries: {data[&#39;recovered&#39;]}&quot;)
+print(f&quot;Total Deaths: {data[&#39;deaths&#39;]}&quot;)
+
+def main():
+region = input(&quot;Enter the region (country, state, or city): &quot;)
+covid_data = fetch_covid_data(region)
+
+if isinstance(covid_data, dict):
+display_statistics(covid_data)
+else:
+print(covid_data)
+
+if _name_ == &quot;_main_&quot;:
+main()
